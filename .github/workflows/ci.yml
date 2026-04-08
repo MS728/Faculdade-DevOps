@@ -1,4 +1,4 @@
-name: Java CI com Maven
+name: Java CI/CD com Maven
 
 on:
   push:
@@ -21,4 +21,10 @@ jobs:
           distribution: 'temurin'
 
       - name: Build com Maven
-        run: mvn clean install
+        run: mvn clean package
+
+      - name: Upload do JAR (artefato)
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-jar
+          path: target/*.jar
