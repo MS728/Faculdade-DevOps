@@ -1,10 +1,16 @@
 package devops;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.*;
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class Main {
 
     static Scanner scanner = new Scanner(System.in);
+    static Gson gson = new Gson();
 
     static String pathEstudantes = "estudantes.json";
     static String pathProfessores = "professores.json";
@@ -64,7 +70,35 @@ public class Main {
     }
 
     static void incluir(String tipo, String path) {
-	
+        List<Map<String, String>> lista = ler(path);
+        Map<String, String> item = new HashMap<>();
+
+        try {
+            if (tipo.equals("Estudantes") || tipo.equals("Professores") || tipo.equals("Disciplinas")) {
+                System.out.print("Código: ");
+                String codigo = scanner.nextLine();
+
+                if (existeCodigo(codigo, path)) throw new Exception("Código já existe");
+
+                item.put("codigo", codigo);
+
+                if (!tipo.equals("Disciplinas")) {
+                    System.out.print("CPF: ");
+                    item.put("cpf", scanner.nextLine());
+                }
+
+                System.out.print("Nome: ");
+                item.put("nome", scanner.nextLine());
+            }
+
+            lista.add(item);
+            salvar(path, lista);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        menuOperacoes(tipo, path);
     }
 
     static void listar(String tipo, String path) {
@@ -79,5 +113,25 @@ public class Main {
 	
     }
 
-    
+    static boolean existeCodigo(String codigo, String path) {
+        List<Map<String, String>> lista = ler(path);
+        return lista.stream().anyMatch(i -> i.get("codigo").equals(codigo));
+    }
+
+    static List<Map<String, String>> ler(String path) {
+        try (Reader reader = new FileReader(path)) {
+            Type type = new TypeToken<List<Map<String, String>>>() {}.getType();
+            return gson.fromJson(reader, type);
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
+    static void salvar(String path, List<Map<String, String>> lista) {
+        try (Writer writer = new FileWriter(path)) {
+            gson.toJson(lista, writer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
