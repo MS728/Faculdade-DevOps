@@ -139,7 +139,16 @@ public class Main {
     }
 
     static void excluir(String tipo, String path) {
-	
+        List<Map<String, String>> lista = ler(path);
+
+        System.out.print("Código: ");
+        String codigo = scanner.nextLine();
+
+        lista.removeIf(item -> item.get("codigo").equals(codigo));
+
+        salvar(path, lista);
+
+        menuOperacoes(tipo, path);
     }
 
     static boolean existeCodigo(String codigo, String path) {
