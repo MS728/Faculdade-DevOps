@@ -102,7 +102,17 @@ public class Main {
     }
 
     static void listar(String tipo, String path) {
-	
+        List<Map<String, String>> lista = ler(path);
+
+        if (lista.isEmpty()) {
+            System.out.println("Nenhum registro.");
+        }
+
+        for (Map<String, String> item : lista) {
+            System.out.println(item);
+        }
+
+        menuOperacoes(tipo, path);
     }
 
     static void atualizar(String tipo, String path) {
