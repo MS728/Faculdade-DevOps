@@ -116,7 +116,26 @@ public class Main {
     }
 
     static void atualizar(String tipo, String path) {
-	
+        List<Map<String, String>> lista = ler(path);
+
+        System.out.print("Código: ");
+        String codigo = scanner.nextLine();
+
+        for (Map<String, String> item : lista) {
+            if (item.get("codigo").equals(codigo)) {
+                for (String key : item.keySet()) {
+                    System.out.print(key + ": ");
+                    String valor = scanner.nextLine();
+                    if (!valor.isEmpty()) {
+                        item.put(key, valor);
+                    }
+                }
+                salvar(path, lista);
+                break;
+            }
+        }
+
+        menuOperacoes(tipo, path);
     }
 
     static void excluir(String tipo, String path) {
