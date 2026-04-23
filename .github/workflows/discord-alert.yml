@@ -1,0 +1,21 @@
+name: Alerta no Discord
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Enviar alerta para o Discord
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          MSG="Novo push no repositório ${GITHUB_REPOSITORY} Autor: ${GITHUB_ACTOR} Branch: ${GITHUB_REF_NAME} Commit: ${GITHUB_SHA} https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "{\"content\":\"$MSG\"}" \
+               "$DISCORD_WEBHOOK"
